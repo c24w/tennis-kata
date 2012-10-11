@@ -1,0 +1,5 @@
+C:\work\TennisScoring\TennisScoring\bin\Debug\TennisScoring.dll
+C:\work\TennisScoring\TennisScoring\bin\Debug\TennisScoring.pdb
+C:\work\TennisScoring\TennisScoring\obj\Debug\TennisScoring.dll
+C:\work\TennisScoring\TennisScoring\obj\Debug\TennisScoring.pdb
+C:\work\TennisScoring\TennisScoring\obj\Debug\TennisScoring.csprojResolveAssemblyReference.cache
