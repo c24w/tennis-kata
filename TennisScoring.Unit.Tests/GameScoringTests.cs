@@ -12,8 +12,8 @@ namespace TennisScoring.Unit.Tests
         [SetUp]
         public void SetUp()
         {
-            _player1 = new Player();
-            _player2 = new Player();
+            _player1 = new Player("Player 1");
+            _player2 = new Player("Player 2");
             _gameScorer = new GameScorer(_player1, _player2);
         }
 
@@ -32,8 +32,8 @@ namespace TennisScoring.Unit.Tests
         {
             for (int i = 0; i < pointsWon; i++)
             {
-                _gameScorer.Player1WinsPoint();
-                _gameScorer.Player2WinsPoint();
+                _gameScorer.ScorePlayer1();
+                _gameScorer.ScorePlayer2();
             }
 
             Assert.That(_gameScorer.Player1.Score, Is.EqualTo(expectedScore));
@@ -45,36 +45,31 @@ namespace TennisScoring.Unit.Tests
         {
             for (int i = 0; i < 3; i++)
             {
-                _gameScorer.Player1WinsPoint();
-                _gameScorer.Player2WinsPoint();
+                _gameScorer.ScorePlayer1();
+                _gameScorer.ScorePlayer2();
             }
 
-            _gameScorer.Player1WinsPoint();
+            _gameScorer.ScorePlayer1();
 
-            Assert.That(_gameScorer.Player1.Score, Is.EqualTo(40));
-            Assert.That(_gameScorer.Player2.Score, Is.EqualTo(40));
-
-            Assert.That(_gameScorer.Player1HasAdvantage(), Is.EqualTo(true));
-            Assert.That(_gameScorer.Player2HasAdvantage(), Is.EqualTo(false));
+            Assert.That(_gameScorer.Advantage, Is.EqualTo(_player1));
         }
 
         [Test]
-        public void Score_reverts_to_deuce_when_advantage_is_lost()
+        public void Score_is_deuce_and_advantage_is_removed_when_advantage_holder_loses_the_subsequent_point()
         {
             for (int i = 0; i < 3; i++)
             {
-                _gameScorer.Player1WinsPoint();
-                _gameScorer.Player2WinsPoint();
+                _gameScorer.ScorePlayer1();
+                _gameScorer.ScorePlayer2();
             }
 
-            _gameScorer.Player1WinsPoint();
-            _gameScorer.Player2WinsPoint();
+            _gameScorer.ScorePlayer1();
+            _gameScorer.ScorePlayer2();
 
             Assert.That(_gameScorer.Player1.Score, Is.EqualTo(40));
             Assert.That(_gameScorer.Player2.Score, Is.EqualTo(40));
 
-            Assert.That(_gameScorer.Player1HasAdvantage(), Is.EqualTo(false));
-            Assert.That(_gameScorer.Player2HasAdvantage(), Is.EqualTo(false));
+            Assert.That(_gameScorer.AdvantageSet(), Is.EqualTo(false));
         }
 
         [Test]
@@ -83,12 +78,12 @@ namespace TennisScoring.Unit.Tests
         [TestCase(2)]
         public void Player_wins_the_game_by_winning_four_points_by_two_clear_points(int opponentPointsWon)
         {
-            for (int i = 0; i < 4; i++)
-                _gameScorer.Player1WinsPoint();
-
             for (int i = 0; i < opponentPointsWon; i++)
-                _gameScorer.Player2WinsPoint();
-
+                _gameScorer.ScorePlayer2();
+            
+            for (int i = 0; i < 4; i++)
+                _gameScorer.ScorePlayer1();
+            
             Assert.That(_gameScorer.GetWinner(), Is.EqualTo(_player1));
         }
 
@@ -97,14 +92,22 @@ namespace TennisScoring.Unit.Tests
         {
             for (int i = 0; i < 3; i++)
             {
-                _gameScorer.Player1WinsPoint();
-                _gameScorer.Player2WinsPoint();
+                _gameScorer.ScorePlayer1();
+                _gameScorer.ScorePlayer2();
             }
 
-            _gameScorer.Player1WinsPoint();
-            _gameScorer.Player1WinsPoint();
+            _gameScorer.ScorePlayer1();
+            _gameScorer.ScorePlayer1();
+
+            Assert.That(_gameScorer.Advantage, Is.EqualTo(_player1));
 
             Assert.That(_gameScorer.GetWinner(), Is.EqualTo(_player1));
+        }
+
+        [Test]
+        public void Scores_do_not_change_once_a_winner_has_been_set()
+        {
+            
         }
     }
 }

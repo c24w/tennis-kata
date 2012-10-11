@@ -2,6 +2,13 @@ namespace TennisScoring
 {
     public class Player
     {
+        public string Name { get; private set; }
+
+        public Player(string name)
+        {
+            Name = name;
+        }
+
         public int Score { get; private set; }
 
         public void IncrementScore()
