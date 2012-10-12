@@ -69,7 +69,7 @@ namespace TennisScoring.Unit.Tests
             Assert.That(_gameScorer.Player1.Score, Is.EqualTo(40));
             Assert.That(_gameScorer.Player2.Score, Is.EqualTo(40));
 
-            Assert.That(_gameScorer.AdvantageSet(), Is.EqualTo(false));
+            Assert.That(_gameScorer.AnyPlayerHasAdvantage(), Is.EqualTo(false));
         }
 
         [Test]
@@ -80,11 +80,11 @@ namespace TennisScoring.Unit.Tests
         {
             for (int i = 0; i < opponentPointsWon; i++)
                 _gameScorer.ScorePlayer2();
-            
+
             for (int i = 0; i < 4; i++)
                 _gameScorer.ScorePlayer1();
-            
-            Assert.That(_gameScorer.GetWinner(), Is.EqualTo(_player1));
+
+            Assert.That(_gameScorer.Winner, Is.EqualTo(_player1));
         }
 
         [Test]
@@ -101,13 +101,30 @@ namespace TennisScoring.Unit.Tests
 
             Assert.That(_gameScorer.Advantage, Is.EqualTo(_player1));
 
-            Assert.That(_gameScorer.GetWinner(), Is.EqualTo(_player1));
+            Assert.That(_gameScorer.Winner, Is.EqualTo(_player1));
         }
 
         [Test]
-        public void Scores_do_not_change_once_a_winner_has_been_set()
+        [TestCase(4,0)]
+        [TestCase(4,1)]
+        [TestCase(4,2)]
+        [TestCase(4,3)]
+        public void Scores_do_not_change_once_a_winner_has_been_set(int player1PointsWon, int player2PointsWon)
         {
-            
+            for (int i = 0; i < player2PointsWon; i++)
+                _gameScorer.ScorePlayer2();
+            for (int i = 0; i < player1PointsWon; i++)
+                _gameScorer.ScorePlayer1();
+
+
+            var winningScore = new[] { _gameScorer.Player1.Score, _gameScorer.Player2.Score };
+
+            _gameScorer.ScorePlayer1();
+
+            var scoreAfterAnotherPoint = new[] { _gameScorer.Player1.Score, _gameScorer.Player2.Score };
+
+            Assert.That(_gameScorer.Winner, Is.EqualTo(_player1));
+            Assert.That(winningScore, Is.EqualTo(scoreAfterAnotherPoint));
         }
     }
 }

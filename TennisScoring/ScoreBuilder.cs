@@ -21,7 +21,10 @@ namespace TennisScoring
 
         public override string ToString()
         {
-            if (_gameScorer.AdvantageSet())
+            if (_gameScorer.HasWinner())
+                return string.Format("{0} wins!", _gameScorer.Winner.Name);
+
+            if (_gameScorer.AnyPlayerHasAdvantage())
                 return string.Format("Advantage {0}", _gameScorer.Advantage.Name);
 
             int score1 = _gameScorer.Player1.Score;
@@ -37,7 +40,7 @@ namespace TennisScoring
                 "{0} - {1}",
                 _scoreWord[score1],
                 _scoreWord[score2]
-                );
+            );
         }
     }
 }

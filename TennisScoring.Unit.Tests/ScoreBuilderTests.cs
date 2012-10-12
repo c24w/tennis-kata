@@ -24,7 +24,6 @@ namespace TennisScoring.Unit.Tests
         [TestCase(1, 1, "Fifteen-all")]
         [TestCase(2, 2, "Thirty-all")]
         [TestCase(3, 3, "Deuce")]
-
         public void Points_won_returns_expected_score_string(int player1PointsWon, int player2PointsWon, string expected)
         {
             for (int i = 0; i < player1PointsWon; i++)
@@ -49,5 +48,23 @@ namespace TennisScoring.Unit.Tests
 
             Assert.That(_scoreBuilder.ToString(), Is.EqualTo("Advantage Player 1"));
         }
+
+        [Test]
+        [TestCase(4, 0, "Player 1 wins!")]
+        [TestCase(4, 1, "Player 1 wins!")]
+        [TestCase(2, 4, "Player 2 wins!")]
+        [TestCase(3, 5, "Player 2 wins!")]
+        [TestCase(10, 12, "Player 2 wins!")]
+        public void When_a_player_wins_the_expected_string_is_returned(int player1PointsWon, int player2PointsWon, string expected)
+        {
+            for (int i = 0; i < player1PointsWon; i++)
+                _gameScorer.ScorePlayer1();
+
+            for (int i = 0; i < player2PointsWon; i++)
+                _gameScorer.ScorePlayer2();
+
+            Assert.That(_scoreBuilder.ToString(), Is.EqualTo(expected));
+        }
+
     }
 }
